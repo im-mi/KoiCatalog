@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="KoiCatalog.Gui.DataTableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:system1="clr-namespace:System;assembly=mscorlib"
+             xmlns:valueConverters="clr-namespace:KoiCatalog.Gui.ValueConverters"
+             xmlns:gui="clr-namespace:KoiCatalog.Gui"
+             xmlns:palettePal="clr-namespace:PalettePal;assembly=PalettePal"
+             xmlns:system="clr-namespace:System;assembly=System"
+             xmlns:koikatu="clr-namespace:KoiCatalog.Plugins.Koikatu;assembly=Koikatu"
+             mc:Ignorable="d" 
+             d:DesignHeight="400"
+             x:Name="RootElement">
+    <UserControl.Resources>
+        <ContextMenu x:Key="ContextMenu" Opened="ContextMenu_OnOpened">
+            <ContextMenu.Resources>
+                <Style x:Key="DataGridColumnMenuItemStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Setter Property="IsCheckable" Value="True"/>
+                    <Setter Property="IsChecked" Value="{Binding (DataGridColumn.Visibility), Converter={x:Static valueConverters:BooleanToCollapsedValueConverter.Instance}}"/>
+                    <Setter Property="Header" Value="{Binding (DataGridColumn.Header)}"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding (DataGridColumn.Visibility), Converter={x:Static valueConverters:BooleanToCollapsedValueConverter.Instance}}" Value="True"/>
+                                <Condition Binding="{Binding Source={x:Reference RootElement}, Path=VisibleDataGridColumnsCount}" Value="1"/>
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContextMenu.Resources>
+            <ContextMenu.ItemContainerStyleSelector>
+                <gui:ConditionalStyleSelector>
+                    <gui:ConditionalStyleSelector.Triggers>
+                        <gui:TypeStyleTrigger Type="{x:Type DataGridColumn}" Style="{StaticResource DataGridColumnMenuItemStyle}"/>
+                    </gui:ConditionalStyleSelector.Triggers>
+                </gui:ConditionalStyleSelector>
+            </ContextMenu.ItemContainerStyleSelector>
+            <ContextMenu.ItemsSource>
+                <CompositeCollection>
+                    <MenuItem Header="_Reset Sort Order" Click="ResetSortOrder_OnClick"/>
+                    <Separator/>
+                    <CollectionContainer Collection="{Binding Source={x:Reference DataGrid}, Path=Columns}"/>
+                </CompositeCollection>
+            </ContextMenu.ItemsSource>
+        </ContextMenu>
+    </UserControl.Resources>
+    <DataGrid ItemsSource="{Binding ElementName=RootElement, Path=DataTable.Rows}" AutoGenerateColumns="False" IsReadOnly="True" CanUserResizeRows="False" HeadersVisibility="Column" x:Name="DataGrid" SelectionUnit="CellOrRowHeader">
+        <DataGrid.Resources>
+            <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+            </Style>
+            <Style x:Key="CenteredColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+            <DataTemplate x:Key="ColorDataTemplate" DataType="{x:Type palettePal:Color}">
+                <gui:ColorControl Color="{Binding Converter={x:Static valueConverters:ColorValueConverter.Instance}}" Width="24" Height="24" Padding="1" Focusable="False"/>
+            </DataTemplate>
+            <DataTemplate x:Key="SexDataTemplate" DataType="{x:Type koikatu:Sex}">
+                <TextBlock Text="{Binding Converter={x:Static valueConverters:SexToStringValueConverter.Instance}}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource CenteredDataGridTextColumnElementStyle}">
+                            <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+                            <Setter Property="FontSize" Value="18"/>
+                            <Setter Property="ToolTip" Value="{Binding Converter={x:Static valueConverters:DisplayValueConverter.Instance}}"/>
+                            <Setter Property="TextTrimming" Value="None"/>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </DataTemplate>
+            <DataTemplate x:Key="ColorCollectionDataTemplate">
+                <ItemsControl Focusable="False" ItemsSource="{Binding}" Padding="8,4" ItemTemplate="{StaticResource ColorDataTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </DataTemplate>
+            <DataTemplate x:Key="UriDataTemplate" DataType="{x:Type system:Uri}">
+                <Border Background="Transparent">
+                    <Border.Resources>
+                        <ControlTemplate x:Key="CardImageTemplate" TargetType="{x:Type ContentControl}">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Background="{TemplateBinding Background}">
+                                <Grid>
+                                    <!--
+                                    A placeholder element is used to ensure that the cell remains a consistent size even if the
+                                    image proportions vary or if the image couldn't be loaded.
+                                    -->
+                                    <Viewbox>
+                                        <Viewbox Width="{Binding Source={x:Static koikatu:KoikatuConstants.CardImageSize}, Path=Width}"
+                                                 Height="{Binding Source={x:Static koikatu:KoikatuConstants.CardImageSize}, Path=Height}"
+                                                 Stretch="Fill"/>
+                                    </Viewbox>
+                                    <Image Source="{Binding IsAsync=True, Converter={x:Static valueConverters:BitmapImageValueConverter.Instance}}"
+                                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Border.Resources>
+
+                    <Border.ContextMenu>
+                        <ContextMenu>
+                            <ContextMenu.ItemsSource>
+                                <CompositeCollection>
+                                    <CollectionContainer Collection="{StaticResource DataGridContextMenuItems}"/>
+                                    <Separator/>
+                                    <MenuItem Command="{x:Static gui:Commands.NavigateTo}" CommandParameter="{Binding}" Icon="{StaticResource Icons.Link}"/>
+                                </CompositeCollection>
+                            </ContextMenu.ItemsSource>
+                        </ContextMenu>
+                    </Border.ContextMenu>
+
+                    <ContentControl Template="{StaticResource CardImageTemplate}"
+                                    Focusable="False"
+                                    ToolTipService.ShowDuration="{x:Static Member=system1:Int32.MaxValue}"
+                                    MouseMove="Uri_OnMouseMove"
+                                    PreviewMouseDown="Uri_OnPreviewMouseDown"
+                                    PreviewMouseUp="Uri_OnPreviewMouseUp"
+                                    Background="Transparent"
+                                    Margin="20,0,0,0"
+                                    BorderThickness="1" BorderBrush="Transparent">
+                        <ContentControl.ToolTip>
+                            <ContentControl Template="{StaticResource CardImageTemplate}"
+                                            MaxWidth="{Binding Source={x:Static koikatu:KoikatuConstants.CardImageSize}, Path=Width}"
+                                            MaxHeight="{Binding Source={x:Static koikatu:KoikatuConstants.CardImageSize}, Path=Height}"
+                                            Focusable="False"/>
+                        </ContentControl.ToolTip>
+
+                        <ContentControl.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick" Command="{x:Static gui:Commands.NavigateTo}" CommandParameter="{Binding}"/>
+                        </ContentControl.InputBindings>
+                    </ContentControl>
+                </Border>
+            </DataTemplate>
+        </DataGrid.Resources>
+    </DataGrid>
+</UserControl>

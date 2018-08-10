@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BB0B9618-58CF-4274-90C6-C45613D8BF93}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KoiCatalog.Plugins.Koikatu</RootNamespace>
+    <AssemblyName>Koikatu</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MessagePack, Version=1.7.3.4, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MessagePack.1.7.3.4\lib\net45\MessagePack.dll</HintPath>
+    </Reference>
+    <Reference Include="MessagePack.UnityShims, Version=1.7.3.4, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MessagePack.UnityShims.1.7.3.4\lib\net45\MessagePack.UnityShims.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BlockHeader.cs" />
+    <Compile Include="BloodType.cs" />
+    <Compile Include="BustSizeType.cs" />
+    <Compile Include="ChaFile.cs" />
+    <Compile Include="ChaFileAccessory.cs" />
+    <Compile Include="ChaFileBody.cs" />
+    <Compile Include="ChaFileClothes.cs" />
+    <Compile Include="ChaFileCoordinate.cs" />
+    <Compile Include="ChaFileCustom.cs" />
+    <Compile Include="ChaFileDefine.cs" />
+    <Compile Include="ChaFileFace.cs" />
+    <Compile Include="ChaFileHair.cs" />
+    <Compile Include="ChaFileMakeup.cs" />
+    <Compile Include="ChaFileParameter.cs" />
+    <Compile Include="ChaFileStatus.cs" />
+    <Compile Include="ClubActivity.cs" />
+    <Compile Include="ColorFilters.cs" />
+    <Compile Include="HairStyle.cs" />
+    <Compile Include="HeightType.cs" />
+    <Compile Include="KoikatuCharacterCard.cs" />
+    <Compile Include="KoikatuCharacterCardQueryHandler.cs" />
+    <Compile Include="KoikatuColorConversion.cs" />
+    <Compile Include="KoikatuConstants.cs" />
+    <Compile Include="KoikatuDefaultDirectoryHandler.cs" />
+    <Compile Include="KoikatuFileHandler.cs" />
+    <Compile Include="KoikatuCharacterCardStatsHandler.cs" />
+    <Compile Include="Personality.cs" />
+    <Compile Include="Sex.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SkinType.cs" />
+    <Compile Include="TeethType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\KoiCatalog\KoiCatalog.csproj">
+      <Project>{BF4006C8-1F76-4C47-BBF5-9843E9B8D15E}</Project>
+      <Name>KoiCatalog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PalettePal\PalettePal.csproj">
+      <Project>{172720fc-5efb-48cd-8a7f-d336d61bb828}</Project>
+      <Name>PalettePal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileIO\FileIO.csproj">
+      <Project>{0ff6263c-33a9-4816-9a05-71388c9bcd6d}</Project>
+      <Name>FileIO</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Koikatu.Resources\ColorFilters\Normal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

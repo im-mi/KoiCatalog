@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="KoiCatalog.Gui.AboutControl"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:valueConverters="clr-namespace:KoiCatalog.Gui.ValueConverters"
+        xmlns:app="clr-namespace:KoiCatalog.App;assembly=KoiCatalog.App"
+        mc:Ignorable="d">
+    <StackPanel HorizontalAlignment="Center">
+        <StackPanel.Resources>
+            <Style TargetType="{x:Type TextBlock}" x:Key="TextStyle" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="Padding" Value="4"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}" x:Key="TextHeaderStyle" BasedOn="{StaticResource TextStyle}">
+                <Setter Property="Margin" Value="0,0,10,0"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+        </StackPanel.Resources>
+
+        <TextBlock HorizontalAlignment="Center" Margin="0,0,0,4">
+            <Hyperlink NavigateUri="{x:Static app:ProgramInfo.HomePage}">
+                <Viewbox Child="{StaticResource Icons.Logo}" Height="70"/>
+            </Hyperlink>
+        </TextBlock>
+        
+        <Grid HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Version" Style="{StaticResource TextHeaderStyle}"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Static app:ProgramInfo.ProductVersion}" Style="{StaticResource TextStyle}"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Author" Style="{StaticResource TextHeaderStyle}"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Static app:ProgramInfo.Author}" Style="{StaticResource TextStyle}"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Home Page" Style="{StaticResource TextHeaderStyle}"/>
+            <TextBlock Grid.Row="2" Grid.Column="1">
+                <Hyperlink NavigateUri="{x:Static app:ProgramInfo.HomePage}">
+                    <TextBlock Text="{Binding Source={x:Static app:ProgramInfo.HomePage}, Converter={x:Static valueConverters:DisplayValueConverter.Instance}}" Style="{StaticResource TextStyle}"/>
+                </Hyperlink>
+            </TextBlock>
+        </Grid>
+    </StackPanel>
+</UserControl>

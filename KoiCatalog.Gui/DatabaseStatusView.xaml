@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="KoiCatalog.Gui.DatabaseStatusView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:valueConverters="clr-namespace:KoiCatalog.Gui.ValueConverters"
+             xmlns:gui="clr-namespace:KoiCatalog.Gui"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:app="clr-namespace:KoiCatalog.App;assembly=KoiCatalog.App"
+             mc:Ignorable="d" x:Name="RootElement">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="EventLogErrors"
+                              Source="{Binding ElementName=RootElement, Path=DatabaseStatus.Events}"
+                              Filter="EventLogErrors_OnFilter"/>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal">
+        <HeaderedContentControl Template="{StaticResource IconHeaderTemplate}"
+                                Header="{StaticResource Icons.Cards}"
+                                Content="{Binding ElementName=RootElement, Path=DatabaseStatus.TotalDatabaseItemCount, Converter={x:Static valueConverters:DisplayValueConverter.Instance}}"
+                                ToolTip="Total database item count" MinWidth="90" Focusable="False"/>
+        <Separator Width="4" Visibility="Hidden"/>
+        <Button Command="gui:Commands.DatabaseEventLog">
+            <!-- Todo: Use a collection view that explicitly has a "Count" property instead of just expecting it to be there. -->
+            <Button.Style>
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource SimpleButtonInverted}">
+                    <Setter Property="ToolTip">
+                        <Setter.Value>
+                            <TextBlock Text="{Binding Source={StaticResource EventLogErrors}, Path=Count, StringFormat={}{0} errors}"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Source={StaticResource EventLogErrors}, Path=Count}" Value="1">
+                            <Setter Property="ToolTip">
+                                <Setter.Value>
+                                    <TextBlock Text="{Binding Source={StaticResource EventLogErrors}, Path=Count, Converter={x:Static valueConverters:DisplayValueConverter.Instance}, StringFormat={}{0} error}"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Source={StaticResource EventLogErrors}, Path=Count}" Value="0">
+                            <Setter Property="ToolTip" Value="Status OK"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <mah:Badged BadgePlacementMode="TopLeft" BadgeBackground="Red">
+                <mah:Badged.Style>
+                    <Style TargetType="{x:Type mah:Badged}" BasedOn="{StaticResource {x:Type mah:Badged}}">
+                        <Setter Property="Badge">
+                            <Setter.Value>
+                                <Binding Source="{StaticResource EventLogErrors}" Path="Count" Converter="{x:Static valueConverters:DisplayValueConverter.Instance}"/>
+                            </Setter.Value>
+                        </Setter>
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Source={StaticResource EventLogErrors}, Path=Count}" Value="0">
+                                <Setter Property="Badge" Value="{x:Null}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </mah:Badged.Style>
+                
+                <HeaderedContentControl Template="{StaticResource IconHeaderTemplate}" Header="{StaticResource Icons.Database}" Focusable="False">
+                    <Grid>
+                        <TextBlock Text="Ready" VerticalAlignment="Center"/>
+
+                        <gui:CustomProgressBar Width="140"
+                                               Value="{Binding ElementName=RootElement, Path=DatabaseStatus.Progress.Value, Mode=OneWay}"
+                                               Maximum="{Binding ElementName=RootElement, Path=DatabaseStatus.Progress.Maximum, Mode=OneWay}">
+                            <gui:CustomProgressBar.Style>
+                                <Style TargetType="{x:Type gui:CustomProgressBar}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=RootElement, Path=DatabaseStatus.State}"
+                                                     Value="{x:Static app:DatabaseStatusState.Ready}">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=RootElement, Path=DatabaseStatus.State}"
+                                                     Value="{x:Static app:DatabaseStatusState.Scanning}">
+                                            <Setter Property="Overlay" Value="Scanning..."/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=RootElement, Path=DatabaseStatus.State}"
+                                                     Value="{x:Static app:DatabaseStatusState.Loading}">
+                                            <Setter Property="Overlay" Value="Loading..."/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=RootElement, Path=DatabaseStatus.State}"
+                                                     Value="{x:Static app:DatabaseStatusState.Saving}">
+                                            <Setter Property="Overlay" Value="Saving..."/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=RootElement, Path=DatabaseStatus.LoadingState}" Value="Indeterminate">
+                                            <Setter Property="IsIndeterminate" Value="True"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=RootElement, Path=DatabaseStatus.Progress, Converter={x:Static valueConverters:IsNullValueConverter.Instance}}" Value="False">
+                                            <Setter Property="Overlay">
+                                                <Setter.Value>
+                                                    <MultiBinding StringFormat="{}{0} / {1}">
+                                                        <Binding ElementName="RootElement"
+                                                                 Path="DatabaseStatus.Progress.Value" Mode="OneWay" Converter="{x:Static valueConverters:DisplayValueConverter.Instance}"/>
+                                                        <Binding ElementName="RootElement"
+                                                                 Path="DatabaseStatus.Progress.Maximum" Mode="OneWay" Converter="{x:Static valueConverters:DisplayValueConverter.Instance}"/>
+                                                    </MultiBinding>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </gui:CustomProgressBar.Style>
+                        </gui:CustomProgressBar>
+                    </Grid>
+                </HeaderedContentControl>
+            </mah:Badged>
+        </Button>
+    </StackPanel>
+</UserControl>

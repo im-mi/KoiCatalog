@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="KoiCatalog.Gui.CustomProgressBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="300"
+             x:Name="RootElement">
+    <Grid>
+        <!-- Background. -->
+        <Border Background="{DynamicResource AccentBaseColorBrush}"/>
+
+        <!-- Text that appears below the progress bar. Only shows up when indeterminate. -->
+        <TextBlock Text="{Binding ElementName=RootElement, Path=Overlay}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Foreground="{DynamicResource SemiTransparentWhiteBrush}">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=IsIndeterminate}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <mah:MetroProgressBar x:Name="ProgressBar"
+                              Value="{Binding ElementName=RootElement, Path=Value}"
+                              Maximum="{Binding ElementName=RootElement, Path=Maximum}"
+                              Background="Transparent"
+                              IsIndeterminate="{Binding ElementName=RootElement, Path=IsIndeterminate}">
+            <mah:MetroProgressBar.Style>
+                <Style TargetType="{x:Type mah:MetroProgressBar}" BasedOn="{StaticResource {x:Type mah:MetroProgressBar}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=IsIndeterminate}" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </mah:MetroProgressBar.Style>
+        </mah:MetroProgressBar>
+
+        <!-- Text that appears above the progress bar. Only shows up when determinate. -->
+        <TextBlock Text="{Binding ElementName=RootElement, Path=Overlay}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Foreground="{DynamicResource WhiteBrush}">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=IsIndeterminate}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Grid>
+</UserControl>

@@ -1,0 +1,72 @@
+﻿<mah:CustomDialog x:Class="KoiCatalog.Gui.CustomMessageDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KoiCatalog.Gui"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:valueConverters="clr-namespace:KoiCatalog.Gui.ValueConverters"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" PreviewKeyDown="CustomMessageDialog_OnPreviewKeyDown">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer x:Name="PART_MessageScrollViewer"
+                      FocusVisualStyle="{x:Null}"
+                      Focusable="False"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <ContentControl x:Name="PART_MessageTextBlock"
+                       Margin="0,5,0,0"
+                       FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                       Focusable="False">
+                
+                <ContentControl.Resources>
+                    <TextBlock x:Key="StringContent" Text="{Binding Message, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
+                </ContentControl.Resources>
+                
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}" BasedOn="{StaticResource {x:Type ContentControl}}">
+                        <Setter Property="Content" Value="{Binding Message, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Message, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged, Converter={x:Static valueConverters:TypeValueConverter.Instance}}" Value="{x:Type system:String}">
+                                <Setter Property="Content" Value="{StaticResource StringContent}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </ScrollViewer>
+
+        <WrapPanel Grid.Row="1"
+                   HorizontalAlignment="Right"
+                   Orientation="Horizontal"
+                   Margin="0,25">
+            <Button x:Name="PART_AffirmativeButton"
+                    Height="35"
+                    MinWidth="80"
+                    Margin="5,0"
+                    Content="{Binding AffirmativeButtonText, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button x:Name="PART_NegativeButton"
+                    Height="35"
+                    MinWidth="80"
+                    Margin="5,0"
+                    Content="{Binding NegativeButtonText, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button x:Name="PART_FirstAuxiliaryButton"
+                    Height="35"
+                    MinWidth="80"
+                    Margin="5,0"
+                    Content="{Binding FirstAuxiliaryButtonText, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                    Visibility="Collapsed"/>
+            <Button x:Name="PART_SecondAuxiliaryButton"
+                    Height="35"
+                    MinWidth="80"
+                    Margin="5,0"
+                    Content="{Binding SecondAuxiliaryButtonText, RelativeSource={RelativeSource AncestorType=local:CustomMessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+                    Visibility="Collapsed"/>
+        </WrapPanel>
+    </Grid>
+</mah:CustomDialog>

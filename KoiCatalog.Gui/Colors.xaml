@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:valueConverters="clr-namespace:KoiCatalog.Gui.ValueConverters">
+    <SolidColorBrush Color="DeepPink" x:Key="SecondaryAccentColorBrush"/>
+    <valueConverters:ColorMultiplyValueConverter Color="#19FFFFFF" x:Key="AccentColorGhostConverter"/>
+    <SolidColorBrush Color="{Binding Source={StaticResource AccentBaseColor}, Converter={StaticResource AccentColorGhostConverter}}" x:Key="AccentColorGhostBrush"/>
+    <valueConverters:ColorMultiplyValueConverter Color="#33FFFFFF" x:Key="SemiTransparentColorConverter"/>
+    <SolidColorBrush x:Key="SemiTransparentBlackBrush" Color="{Binding Source={StaticResource BlackColor}, Converter={StaticResource SemiTransparentColorConverter}}"/>
+</ResourceDictionary>

@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BF4006C8-1F76-4C47-BBF5-9843E9B8D15E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KoiCatalog</RootNamespace>
+    <AssemblyName>KoiCatalog</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\CompoundQueryHandler.cs" />
+    <Compile Include="Data\FullAccessComponentFilter.cs" />
+    <Compile Include="Data\IReadOnlyComponentFilter.cs" />
+    <Compile Include="Data\ReadOnlyComponentFilter.cs" />
+    <Compile Include="Data\ReadOnlyEntity.cs" />
+    <Compile Include="Data\ReadOnlyEntityExtension.cs" />
+    <Compile Include="Data\Stat.cs" />
+    <Compile Include="Data\Stats.cs" />
+    <Compile Include="Data\FilteredEntity.cs" />
+    <Compile Include="Data\StatsHandler.cs" />
+    <Compile Include="Data\IReadOnlyEntity.cs" />
+    <Compile Include="Data\QueryParameterTemplateCategory.cs" />
+    <Compile Include="Data\QueryParameterTemplate.cs" />
+    <Compile Include="Data\ComponentTypeCode.cs" />
+    <Compile Include="Data\StatsCategory.cs" />
+    <Compile Include="Data\StatsLoader.cs" />
+    <Compile Include="Plugins\OverallStatsHandler.cs" />
+    <Compile Include="Plugins\QueryUtil.cs" />
+    <Compile Include="Data\Component.cs" />
+    <Compile Include="Data\DisplayAttribute.cs" />
+    <Compile Include="Data\Visibility.cs" />
+    <Compile Include="Data\Entity.cs" />
+    <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Data\QueryHandler.cs" />
+    <Compile Include="Data\DatabaseEventEventArgs.cs" />
+    <Compile Include="Data\EventSeverity.cs" />
+    <Compile Include="Data\DatabaseEventType.cs" />
+    <Compile Include="Data\ILogger.cs" />
+    <Compile Include="Data\Progress.cs" />
+    <Compile Include="Data\Query.cs" />
+    <Compile Include="Data\QueryFormat.cs" />
+    <Compile Include="Data\QueryFormatParameter.cs" />
+    <Compile Include="Data\QueryParameter.cs" />
+    <Compile Include="Data\SerializationConstants.cs" />
+    <Compile Include="Data\CompressionMethod.cs" />
+    <Compile Include="Data\SerializationFormat.cs" />
+    <Compile Include="Drawing\ConcurrentCachingPalette.cs" />
+    <Compile Include="Drawing\Palettes.cs" />
+    <Compile Include="IO\IOUtil.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="Util\ConcurrentList.cs" />
+    <Compile Include="Data\DatabaseLoadMethod.cs" />
+    <Compile Include="Util\Disposable.cs" />
+    <Compile Include="Data\DatabaseEvent.cs" />
+    <Compile Include="Data\IDatabaseLoadMethod.cs" />
+    <Compile Include="Data\IDatabaseSaveMethod.cs" />
+    <Compile Include="Data\QueryResult.cs" />
+    <Compile Include="Data\SerializedDatabaseLoadMethod.cs" />
+    <Compile Include="Data\SerializedDatabaseSaveMethod.cs" />
+    <Compile Include="IO\BinaryReaderExtension.cs" />
+    <Compile Include="Data\DirectDatabaseConnection.cs" />
+    <Compile Include="Data\IDatabaseConnection.cs" />
+    <Compile Include="Data\Database.cs" />
+    <Compile Include="IO\PngFile.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\AutoSizingList.cs" />
+    <Compile Include="Util\EnumeratorExtension.cs" />
+    <Compile Include="Util\ICloneable.cs" />
+    <Compile Include="Util\StringUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PalettePal\PalettePal.csproj">
+      <Project>{172720fc-5efb-48cd-8a7f-d336d61bb828}</Project>
+      <Name>PalettePal</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="KoiCatalog.Resources\Palettes\Hair.pal">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="KoiCatalog.Resources\Palettes\Skin.pal">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

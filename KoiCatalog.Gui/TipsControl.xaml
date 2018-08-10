@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="KoiCatalog.Gui.TipsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignWidth="300">
+    <StackPanel>
+        <TextBlock Text="Tips" Style="{StaticResource Heading2Style}"/>
+        
+        <TextBlock Style="{StaticResource Heading3Style}">Searching</TextBlock>
+        <TextBlock Style="{StaticResource ParagraphStyle}">
+            To search for multiple values, use the <Run Style="{StaticResource EmphasisTextStyle}">OR</Run> keyword.
+            For example, <Run Style="{StaticResource EmphasisTextStyle}">miku OR ミク</Run> searches for either <Run Style="{StaticResource EmphasisTextStyle}">miku</Run> or <Run Style="{StaticResource EmphasisTextStyle}">ミク</Run>.
+            <Run Style="{StaticResource EmphasisTextStyle}">OR</Run> must be in all uppercase.
+        </TextBlock>
+
+        <TextBlock Style="{StaticResource Heading3Style}">Miscellaneous</TextBlock>
+        <TextBlock Style="{StaticResource ParagraphStyle}">
+            To reset the sort order, right-click the column headers and select <Run Style="{StaticResource EmphasisTextStyle}">Reset Sort Order</Run>.
+        </TextBlock>
+
+        <TextBlock Style="{StaticResource Heading3Style}">Playing with Cards</TextBlock>
+        <TextBlock Style="{StaticResource ParagraphStyle}">
+            To make new cards show up, select <Run Style="{StaticResource EmphasisTextStyle}">Refresh</Run> from the menu.
+        </TextBlock>
+        
+        <TextBlock Style="{StaticResource ParagraphStyle}">
+            To navigate to a card in the file browser, double-click its card image.
+        </TextBlock>
+        
+        <TextBlock Style="{StaticResource ParagraphStyle}">
+            To quickly load a card into the game, drag its card image into the game window*.
+        </TextBlock>
+        
+        <TextBlock Style="{StaticResource FootnoteStyle}">
+            * Requires <Hyperlink NavigateUri="https://github.com/im-mi/KoikatuDragAndDrop">Koikatu Drag and Drop</Hyperlink>.
+        </TextBlock>
+    </StackPanel>
+</UserControl>

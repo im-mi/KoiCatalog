@@ -1,0 +1,222 @@
+﻿<UserControl x:Name="RootElement" x:Class="KoiCatalog.Gui.QueryEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KoiCatalog.Gui"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:valueConverters="clr-namespace:KoiCatalog.Gui.ValueConverters"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:palettePal="clr-namespace:PalettePal;assembly=PalettePal"
+             xmlns:app="clr-namespace:KoiCatalog.App;assembly=KoiCatalog.App"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="TrimmedTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+
+        <DataTemplate x:Key="DefaultDataTemplate" DataType="{x:Type app:QueryEditorParameter}">
+            <TextBlock Style="{StaticResource TrimmedTextStyle}" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} ({1})">
+                        <Binding Path="Template.Name"/>
+                        <Binding Path="Template.Type"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </DataTemplate>
+
+        <DataTemplate x:Key="StringDataTemplate" DataType="{x:Type app:QueryEditorParameter}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ToolTip="{Binding Template.Name, Mode=OneWay}">
+                    <TextBlock Text="{Binding Template.Name}" Style="{StaticResource TrimmedTextStyle}" VerticalAlignment="Center"/>
+                </Label>
+                <TextBox Grid.Column="1" Margin="0,2" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                         mah:TextBoxHelper.ClearTextButton="{Binding RelativeSource={RelativeSource Self}, Path=Text, Converter={x:Static valueConverters:IsNotNullOrEmptyValueConverter.Instance}}"
+                         VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SelectorDataTemplate" DataType="{x:Type app:QueryEditorParameter}">
+            <StackPanel Margin="0,0,0,10">
+                <StackPanel.Resources>
+                    <CollectionViewSource x:Key="SelectableValuesCollectionViewSource" Source="{Binding SelectableValues}">
+                        <CollectionViewSource.SortDescriptions>
+                            <componentModel:SortDescription Direction="Ascending" PropertyName="Value"/>
+                        </CollectionViewSource.SortDescriptions>
+                    </CollectionViewSource>
+                </StackPanel.Resources>
+
+                <StackPanel.CommandBindings>
+                    <CommandBinding Command="SelectAll" Executed="SelectAll_OnExecuted"/>
+                    <CommandBinding Command="local:Commands.SelectNone" Executed="SelectNone_OnExecuted"/>
+                    <CommandBinding Command="local:Commands.SelectInverse" Executed="SelectInverse_OnExecuted"/>
+                </StackPanel.CommandBindings>
+
+                <Border Background="{StaticResource AccentColorBrush4}" Margin="0,2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Label Grid.Column="0" VerticalAlignment="Center" ToolTip="{Binding Template.Name}">
+                            <TextBlock Text="{Binding Template.Name}" Style="{StaticResource TrimmedTextStyle}"/>
+                        </Label>
+                        
+                        <Button Grid.Column="1" Template="{StaticResource InvertedClearButtonTemplate}" Command="local:Commands.SelectNone" Margin="2">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource InvertedClearButtonStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedItemCount}" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+                </Border>
+                
+                <ItemsControl ItemsSource="{Binding Source={StaticResource SelectableValuesCollectionViewSource}}" Margin="4,0" Focusable="False">
+                    <ItemsControl.Resources>
+                        <ItemsPanelTemplate x:Key="UniformGrid">
+                            <UniformGrid Columns="{Binding Template.Type, Converter={x:Static valueConverters:TypeToGridColumnCountValueConverter.Instance}, FallbackValue=2}" />
+                        </ItemsPanelTemplate>
+                        <ItemsPanelTemplate x:Key="WrapPanel">
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.Resources>
+                    
+                    <ItemsControl.Style>
+                        <Style TargetType="{x:Type ItemsControl}" BasedOn="{StaticResource {x:Type ItemsControl}}">
+                            <Setter Property="ItemsPanel" Value="{StaticResource UniformGrid}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Template.Type}" Value="{x:Type palettePal:Adjective}">
+                                    <Setter Property="ItemsPanel" Value="{StaticResource WrapPanel}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
+                    
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox ToolTip="{Binding Value, Converter={x:Static valueConverters:DisplayValueConverter.Instance}}"
+                                      HorizontalContentAlignment="Stretch"
+                                      VerticalContentAlignment="Stretch"
+                                      IsChecked="{Binding IsSelected}"
+                                      ContextMenuOpening="UIElement_OnContextMenuOpening">
+                                <CheckBox.ContextMenu>
+                                    <ContextMenu>
+                                        <StaticResourceExtension ResourceKey="MenuItems.SelectAll"/>
+                                        <StaticResourceExtension ResourceKey="MenuItems.SelectNone"/>
+                                        <StaticResourceExtension ResourceKey="MenuItems.SelectInverse"/>
+                                    </ContextMenu>
+                                </CheckBox.ContextMenu>
+
+                                <TextBlock Text="{Binding Value, Converter={x:Static valueConverters:DisplayValueConverter.Instance}}"
+                                           Style="{StaticResource TrimmedTextStyle}"
+                                           Padding="0,4,8,4"/>
+                                
+                                <CheckBox.Style>
+                                    <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Value, Converter={x:Static valueConverters:TypeValueConverter.Instance}}"
+                                                         Value="{x:Type palettePal:Adjective}">
+                                                <Setter Property="Template" Value="{StaticResource CircularCheckboxTemplate}"/>
+                                                <Setter Property="Background"
+                                                        Value="{Binding Value.DisplayColor, Converter={x:Static valueConverters:ColorToBrushValueConverter.Instance}}"/>
+                                                <Setter Property="Padding" Value="2"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </CheckBox.Style>
+                            </CheckBox>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    
+    <ContentControl Focusable="False">
+        <ContentControl.Resources>
+            <ItemsControl Focusable="False" x:Key="Content">
+                <ItemsControl.ItemsSource>
+                    <Binding>
+                        <Binding.Source>
+                            <CollectionViewSource Source="{Binding Source={x:Reference RootElement}, Path=QueryEditor}">
+                                <CollectionViewSource.GroupDescriptions>
+                                    <PropertyGroupDescription PropertyName="Template.Category"/>
+                                </CollectionViewSource.GroupDescriptions>
+                                <CollectionViewSource.SortDescriptions>
+                                    <componentModel:SortDescription PropertyName="Template.Category.DisplayIndex"/>
+                                    <componentModel:SortDescription PropertyName="Template.Category.Name"/>
+                                    <componentModel:SortDescription PropertyName="Template.DisplayIndex"/>
+                                </CollectionViewSource.SortDescriptions>
+                            </CollectionViewSource>
+                        </Binding.Source>
+                    </Binding>
+                </ItemsControl.ItemsSource>
+
+                <ItemsControl.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="{x:Type GroupItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Expander IsExpanded="True"
+                                                      Header="{Binding Name.Name, Converter={x:Static valueConverters:DisplayValueConverter.Instance}}">
+                                                <ItemsPresenter/>
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ItemsControl.GroupStyle>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type app:QueryEditorParameter}">
+                        <ContentControl Content="{Binding}" Focusable="False">
+                            <ContentControl.Style>
+                                <Style TargetType="{x:Type ContentControl}" BasedOn="{StaticResource {x:Type ContentControl}}">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource DefaultDataTemplate}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Template.Type}" Value="{x:Type system:String}">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource StringDataTemplate}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Template.IsValueSelectable}" Value="True">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource SelectorDataTemplate}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="No search options are available." Margin="4" Style="{StaticResource PlaceholderText}" x:Key="Placeholder"/>
+        </ContentControl.Resources>
+
+        <ContentControl.Style>
+            <Style TargetType="{x:Type ContentControl}" BasedOn="{StaticResource {x:Type ContentControl}}">
+                <Setter Property="Content" Value="{StaticResource Content}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=RootElement, Path=QueryEditor.Count}" Value="0">
+                        <Setter Property="Content" Value="{StaticResource Placeholder}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+</UserControl>

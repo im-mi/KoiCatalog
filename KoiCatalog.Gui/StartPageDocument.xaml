@@ -1,0 +1,114 @@
+﻿<local:Document x:Class="KoiCatalog.Gui.StartPageDocument"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KoiCatalog.Gui"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:fileIO="clr-namespace:KoiCatalog.Plugins.FileIO;assembly=FileIO"
+             xmlns:app="clr-namespace:KoiCatalog.App;assembly=KoiCatalog.App"
+             mc:Ignorable="d"
+             x:Name="RootElement">
+    <UserControl.CommandBindings>
+        <CommandBinding Command="local:Commands.OpenDirectory" Executed="OpenDirectoryCommand_Executed" PreviewCanExecute="AllowIfActionsEnabled_OnPreviewCanExecute"/>
+    </UserControl.CommandBindings>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="800" VerticalAlignment="Center">
+            <TextBlock HorizontalAlignment="Center" Margin="20">
+                <Hyperlink NavigateUri="{x:Static app:ProgramInfo.HomePage}">
+                    <Viewbox Child="{StaticResource Icons.Logo}" Height="80"/>
+                </Hyperlink>
+            </TextBlock>
+
+            <Grid Margin="20,0,20,40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition MaxWidth="270"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <ContentControl Focusable="False" Foreground="{DynamicResource AccentColorGhostBrush}">
+                        <Viewbox Child="{StaticResource Icons.Cards}" Stretch="UniformToFill"/>
+                    </ContentControl>
+
+                    <StackPanel Margin="8">
+                        <TextBlock Text="Get Started" Style="{StaticResource HeadingStyle}"/>
+                        <TextBlock Text="Select a directory to catalog." TextWrapping="Wrap" Margin="0,0,0,16"/>
+                        <ContentControl Focusable="False" DataContext="{Binding ElementName=RootElement}">
+                            <ContentControl.Resources>
+                                <CollectionViewSource Source="{Binding Path=DefaultDirectories}" x:Key="DefaultDirectoryGroups">
+                                    <CollectionViewSource.GroupDescriptions>
+                                        <PropertyGroupDescription PropertyName="GroupName"/>
+                                    </CollectionViewSource.GroupDescriptions>
+                                    <CollectionViewSource.SortDescriptions>
+                                        <componentModel:SortDescription PropertyName="Name"/>
+                                    </CollectionViewSource.SortDescriptions>
+                                </CollectionViewSource>
+
+                                <!-- Content is swapped out using a DataTemplate instead of a style to avoid a bug that duplicates the first list item. -->
+                                <DataTemplate x:Key="Content">
+                                    <ItemsControl Focusable="False" ItemsSource="{Binding Source={StaticResource DefaultDirectoryGroups}}">
+                                        <ItemsControl.GroupStyle>
+                                            <GroupStyle>
+                                                <GroupStyle.HeaderTemplate>
+                                                    <DataTemplate DataType="{x:Type CollectionViewGroup}">
+                                                        <TextBlock Text="{Binding Name}" FontSize="16" Foreground="{StaticResource AccentBaseColorBrush}" TextWrapping="Wrap"/>
+                                                    </DataTemplate>
+                                                </GroupStyle.HeaderTemplate>
+                                                <GroupStyle.ContainerStyle>
+                                                    <Style TargetType="{x:Type GroupItem}">
+                                                        <Setter Property="Margin" Value="0,0,0,16"/>
+                                                    </Style>
+                                                </GroupStyle.ContainerStyle>
+                                            </GroupStyle>
+                                        </ItemsControl.GroupStyle>
+
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type fileIO:DefaultDirectory}">
+                                                <Button Click="LoadDirectoryButton_OnClick" ToolTip="{Binding Location}" Style="{StaticResource SimpleButton}">
+                                                    <HeaderedContentControl Margin="8,2,0,2" Template="{StaticResource IconHeaderTemplate}" Focusable="False">
+                                                        <HeaderedContentControl.Header>
+                                                            <Label Content="{StaticResource Icons.FolderOpen}" Padding="0" Foreground="{StaticResource AccentColorBrush}" Margin="0,0,4,0"/>
+                                                        </HeaderedContentControl.Header>
+                                                        <HeaderedContentControl.Content>
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                                                                <TextBlock Text="{Binding Location}" TextTrimming="CharacterEllipsis" Foreground="{StaticResource AccentColorBrush}"/>
+                                                            </StackPanel>
+                                                        </HeaderedContentControl.Content>
+                                                    </HeaderedContentControl>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DataTemplate>
+
+                                <DataTemplate x:Key="Placeholder">
+                                    <TextBlock Text="No default directories are available." Style="{StaticResource PlaceholderText}" Margin="0,0,0,16"/>
+                                </DataTemplate>
+                            </ContentControl.Resources>
+
+                            <ContentControl.Style>
+                                <Style TargetType="{x:Type ContentControl}" BasedOn="{StaticResource {x:Type ContentControl}}">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource Content}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=RootElement, Path=DefaultDirectories.Count}" Value="0">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource Placeholder}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+
+                        <TextBlock TextWrapping="Wrap">
+                            <Hyperlink Command="local:Commands.OpenDirectory">Select other directory...</Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+
+                <local:TipsControl Grid.Column="2"/>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</local:Document>

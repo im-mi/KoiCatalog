@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E89E4E7A-BE5C-4EB2-8C22-27D86D7B8B86}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>KoiCatalog.Gui</RootNamespace>
+    <AssemblyName>KoiCatalog.Gui</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup>
+    <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.6.4\lib\net46\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Ookii.Dialogs.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ookii.Dialogs.1.0\lib\net35\Ookii.Dialogs.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="ColorControl.xaml.cs">
+      <DependentUpon>ColorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConditionalStyleSelector.cs" />
+    <Compile Include="CustomDialogManager.cs" />
+    <Compile Include="CustomMessageDialog.xaml.cs">
+      <DependentUpon>CustomMessageDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomProgressBar.xaml.cs">
+      <DependentUpon>CustomProgressBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Document.cs" />
+    <Compile Include="EventViewer.xaml.cs">
+      <DependentUpon>EventViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AppStartup.cs" />
+    <Compile Include="PathTrimmingTextBlock.cs" />
+    <Compile Include="ResultsDocument.xaml.cs">
+      <DependentUpon>ResultsDocument.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StartPageDocument.xaml.cs">
+      <DependentUpon>StartPageDocument.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TipsControl.xaml.cs">
+      <DependentUpon>TipsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValueConverters\BooleanToCollapsedValueConverter.cs" />
+    <Compile Include="Commands.cs" />
+    <Compile Include="StatsView.xaml.cs">
+      <DependentUpon>StatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DatabaseStatusView.xaml.cs">
+      <DependentUpon>DatabaseStatusView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataTableView.xaml.cs">
+      <DependentUpon>DataTableView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValueConverters\CompoundValueConverter.cs" />
+    <Compile Include="ValueConverters\StringJoinValueConverter.cs" />
+    <Compile Include="ValueConverters\ColorMultiplyValueConverter.cs" />
+    <Compile Include="ValueConverters\ColorToBrushValueConverter.cs" />
+    <Compile Include="ValueConverters\IsNotNullOrEmptyValueConverter.cs" />
+    <Compile Include="ValueConverters\IsNullValueConverter.cs" />
+    <Compile Include="ValueConverters\FloatToSliderValueValueConverter.cs" />
+    <Compile Include="QueryEditorView.xaml.cs">
+      <DependentUpon>QueryEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValueConverters\DisplayValueConverter.cs" />
+    <Compile Include="ValueConverters\ColorValueConverter.cs" />
+    <Compile Include="ValueConverters\TaskbarItemProgressStateValueConverter.cs" />
+    <Compile Include="ValueConverters\RatioValueConverter.cs" />
+    <Compile Include="ValueConverters\SexToStringValueConverter.cs" />
+    <Compile Include="ValueConverters\TypeValueConverter.cs" />
+    <Compile Include="ValueConverters\TypeToGridColumnCountValueConverter.cs" />
+    <Compile Include="ValueConverters\BitmapImageValueConverter.cs" />
+    <Compile Include="AboutControl.xaml.cs">
+      <DependentUpon>AboutControl.xaml</DependentUpon>
+    </Compile>
+    <Page Include="ColorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomExpanderStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DatabaseStatusView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EventViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DataTableView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomMessageDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="QueryEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AboutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResultsDocument.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StartPageDocument.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TipsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KoiCatalog.App\KoiCatalog.App.csproj">
+      <Project>{3a5fbca1-c94f-4fd6-85c7-fedf688f42a3}</Project>
+      <Name>KoiCatalog.App</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KoiCatalog\KoiCatalog.csproj">
+      <Project>{bf4006c8-1f76-4c47-bbf5-9843e9b8d15e}</Project>
+      <Name>KoiCatalog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PalettePal\PalettePal.csproj">
+      <Project>{172720fc-5efb-48cd-8a7f-d336d61bb828}</Project>
+      <Name>PalettePal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\FileIO\FileIO.csproj">
+      <Project>{0ff6263c-33a9-4816-9a05-71388c9bcd6d}</Project>
+      <Name>FileIO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Koikatu\Koikatu.csproj">
+      <Project>{bb0b9618-58cf-4274-90c6-c45613d8bf93}</Project>
+      <Name>Koikatu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SimpleErrorReporter\SimpleErrorReporter.csproj">
+      <Project>{A2C090D4-E0F2-41CA-B599-7087D924716E}</Project>
+      <Name>SimpleErrorReporter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Readme.html">
+      <Link>Readme.html</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Resources\Media\Logo.png">
+      <Link>Resources\Media\Logo.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Resources\Media\Screenshots\1.png">
+      <Link>Resources\Media\Screenshots\1.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Resources\Media\Screenshots\2.png">
+      <Link>Resources\Media\Screenshots\2.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Resources\Media\Style.css">
+      <Link>Resources\Media\Style.css</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\License.txt">
+      <Link>License.txt</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,184 @@
+﻿<mah:MetroWindow x:Name="RootElement" x:Class="KoiCatalog.Gui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KoiCatalog.Gui"
+        xmlns:valueConverters="clr-namespace:KoiCatalog.Gui.ValueConverters"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:app="clr-namespace:KoiCatalog.App;assembly=KoiCatalog.App"
+        mc:Ignorable="d"
+        Width="1152" Height="768" Closing="Window_Closing"
+        Icon="icon.ico"
+        GlowBrush="Black"
+        WindowStartupLocation="CenterScreen">
+    <mah:MetroWindow.CommandBindings>
+        <CommandBinding Command="local:Commands.NavigateTo" Executed="NavigateTo_OnExecuted"/>
+        <CommandBinding Command="local:Commands.OpenDirectory" Executed="OpenDirectoryCommand_Executed" PreviewCanExecute="AllowIfActionsEnabled_OnPreviewCanExecute"/>
+        <CommandBinding Command="local:Commands.Exit" Executed="ExitCommand_Executed" PreviewCanExecute="AllowIfActionsEnabled_OnPreviewCanExecute"/>
+        <CommandBinding Command="local:Commands.Refresh" Executed="RefreshCommand_Executed" CanExecute="DatabaseCommand_OnCanExecute" PreviewCanExecute="AllowIfActionsEnabled_OnPreviewCanExecute"/>
+        <CommandBinding Command="local:Commands.Rebuild" Executed="RebuildCommandExecuted" CanExecute="DatabaseCommand_OnCanExecute" PreviewCanExecute="AllowIfActionsEnabled_OnPreviewCanExecute"/>
+        <CommandBinding Command="local:Commands.DatabaseEventLog" Executed="DatabaseStatus_OnExecuted" CanExecute="DatabaseCommand_OnCanExecute" PreviewCanExecute="AllowIfActionsEnabled_OnPreviewCanExecute"/>
+        <CommandBinding Command="local:Commands.About" Executed="AboutCommand_Executed" PreviewCanExecute="AllowIfActionsEnabled_OnPreviewCanExecute"/>
+        <CommandBinding Command="local:Commands.StartPage" Executed="StartScreenCommand_OnExecuted" PreviewCanExecute="AllowIfActionsEnabled_OnPreviewCanExecute"/>
+    </mah:MetroWindow.CommandBindings>
+    
+    <mah:MetroWindow.TaskbarItemInfo>
+        <TaskbarItemInfo ProgressState="{Binding
+                ElementName=RootElement,
+                Path=ResultsDocument.DatabaseStatus.LoadingState,
+                Converter={x:Static valueConverters:TaskbarItemProgressStateValueConverter.Instance}}"
+                Description="{Binding ElementName=RootElement, Path=Title}">
+            <TaskbarItemInfo.ProgressValue>
+                <MultiBinding Converter="{x:Static valueConverters:RatioMultiValueConverter.Instance}">
+                    <Binding ElementName="RootElement" Path="ResultsDocument.DatabaseStatus.Progress.Value" FallbackValue="0"/>
+                    <Binding ElementName="RootElement" Path="ResultsDocument.DatabaseStatus.Progress.Maximum" FallbackValue="1"/>
+                </MultiBinding>
+            </TaskbarItemInfo.ProgressValue>
+        </TaskbarItemInfo>
+    </mah:MetroWindow.TaskbarItemInfo>
+    
+    <mah:MetroWindow.Style>
+        <Style TargetType="{x:Type mah:MetroWindow}" BasedOn="{StaticResource {x:Type mah:MetroWindow}}">
+            <Setter Property="Title">
+                <Setter.Value>
+                    <MultiBinding StringFormat="{}{0} - {1}">
+                        <Binding ElementName="RootElement" Path="CurrentDocument.Title"/>
+                        <Binding Source="{x:Static app:ProgramInfo.ProductFullName}"/>
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=RootElement, Path=CurrentDocument}" Value="{x:Null}">
+                    <Setter Property="Title" Value="{x:Static app:ProgramInfo.ProductFullName}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </mah:MetroWindow.Style>
+
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout Position="Right" Width="400" x:Name="EventLogFlyout" IsPinned="False" Header="Event Log" Padding="16,0,16,16">
+                <local:EventViewer Events="{Binding ElementName=RootElement, Path=ResultsDocument.DatabaseStatus.Events}"/>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Menu Grid.Column="0">
+                <MenuItem Header="_File">
+                    <MenuItem.Items>
+                        <MenuItem Command="local:Commands.OpenDirectory" Icon="{StaticResource Icons.FolderOpen}"/>
+                        <MenuItem Command="local:Commands.StartPage" Icon="{StaticResource Icons.Cards}"/>
+                        <Separator/>
+                        <MenuItem Command="local:Commands.Exit" Icon="{StaticResource Icons.CrossSolid}"/>
+                    </MenuItem.Items>
+                </MenuItem>
+                <MenuItem Header="_Database">
+                    <MenuItem.Items>
+                        <MenuItem Command="local:Commands.Refresh" Icon="{StaticResource Icons.Refresh}"/>
+                        <MenuItem Command="local:Commands.Rebuild" Icon="{StaticResource Icons.Bank}"/>
+                        <Separator/>
+                        <MenuItem Command="local:Commands.DatabaseEventLog" Icon="{StaticResource Icons.BulletedList}"/>
+                    </MenuItem.Items>
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem Command="local:Commands.About" Icon="{StaticResource Icons.Info}"/>
+                </MenuItem>
+            </Menu>
+
+            <Button Grid.Column="1" Click="CurrentDocumentCloseButton_OnClick" VerticalAlignment="Top" Template="{StaticResource CloseButtonTemplate}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ClearButtonStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=RootElement, Path=CurrentDocument}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=RootElement, Path=CurrentDocument.IsUserClosable}" Value="False">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=RootElement, Path=Documents.Count}" Value="1">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+
+        <!--
+        This control must be focusable so that it can be focused when the current document changes.
+        This ensures that command validators will re-evaluate immediately when switching documents.
+        -->
+        <mah:TransitioningContentControl Grid.Row="1" x:Name="CurrentDocumentPanel" FocusVisualStyle="{x:Null}" IsTabStop="False" Transition="Left"/>
+
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal" x:Name="StackPanel" ToolTip="Total item count" Background="Transparent">
+                    <Viewbox Height="{Binding ElementName=StackPanel, Path=ActualHeight}" Margin="0,0,4,0">
+                        <mah:ProgressRing Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}">
+                            <mah:ProgressRing.Style>
+                                <Style TargetType="{x:Type mah:ProgressRing}" BasedOn="{StaticResource {x:Type mah:ProgressRing}}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=RootElement, Path=ResultsDocument.QueryResultsService.IsRefreshing}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </mah:ProgressRing.Style>
+                        </mah:ProgressRing>
+                    </Viewbox>
+                    <TextBlock>
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="Text" Value="{Binding ElementName=RootElement, Path=ResultsDocument.QueryResults.Rows.Count, Mode=OneWay, Converter={x:Static valueConverters:DisplayValueConverter.Instance}, StringFormat={}{0} items}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=RootElement, Path=ResultsDocument.QueryResults.Rows.Count, Mode=OneWay}" Value="1">
+                                        <Setter Property="Text" Value="{Binding ElementName=RootElement, Path=ResultsDocument.QueryResults.Rows.Count, Mode=OneWay, Converter={x:Static valueConverters:DisplayValueConverter.Instance}, StringFormat={}{0} item}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+
+                <StatusBarItem.Style>
+                    <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource {x:Type StatusBarItem}}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=RootElement, Path=ResultsDocument}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StatusBarItem.Style>
+            </StatusBarItem>
+
+            <StatusBarItem HorizontalAlignment="Right">
+                <local:DatabaseStatusView DatabaseStatus="{Binding ElementName=RootElement, Path=ResultsDocument.DatabaseStatus}"/>
+                
+                <StatusBarItem.Style>
+                    <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource {x:Type StatusBarItem}}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=RootElement, Path=ResultsDocument}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StatusBarItem.Style>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</mah:MetroWindow>

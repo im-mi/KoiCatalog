@@ -63,6 +63,7 @@
     <Compile Include="ChaFileStatus.cs" />
     <Compile Include="ClubActivity.cs" />
     <Compile Include="ColorFilters.cs" />
+    <Compile Include="FileTypeException.cs" />
     <Compile Include="HairStyle.cs" />
     <Compile Include="HeightType.cs" />
     <Compile Include="KoikatuCharacterCard.cs" />

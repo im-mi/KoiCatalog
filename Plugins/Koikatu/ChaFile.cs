@@ -22,22 +22,30 @@ namespace KoiCatalog.Plugins.Koikatu
         {
             using (var br = new BinaryReader(stream))
             {
-                PngFile.SkipPng(stream);
-
                 try
                 {
-                    br.ReadByte();
-                    stream.Position -= sizeof(byte);
+                    PngFile.SkipPng(stream);
+
+                    try
+                    {
+                        br.ReadByte();
+                        stream.Position -= sizeof(byte);
+                    }
+                    catch (EndOfStreamException)
+                    {
+                        throw new IOException("File is just a plain image with no card data.");
+                    }
+
+                    loadProductNo = br.ReadInt32();
+                    var title = br.ReadString();
+                    if (title != ChaFileDefine.CharaFileMark)
+                        throw new IOException("Not a character card.");
                 }
-                catch (EndOfStreamException)
+                catch (Exception ex)
                 {
-                    throw new IOException("File is just a plain image with no card data.");
+                    throw new FileTypeException("File is not a Koikatu character card or the file type could not be determined.", ex);
                 }
 
-                loadProductNo = br.ReadInt32();
-                var title = br.ReadString();
-                if (title != ChaFileDefine.CharaFileMark)
-                    throw new IOException("Not a character card.");
                 var version = new Version(br.ReadString());
                 var facePngDataLength = br.ReadInt32();
                 stream.Position += facePngDataLength;

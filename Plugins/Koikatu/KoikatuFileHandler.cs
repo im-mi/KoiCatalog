@@ -18,6 +18,9 @@ namespace KoiCatalog.Plugins.Koikatu
 
             var fileInfo = loader.Entity.GetComponent(FileInfo.TypeCode);
 
+            if (fileInfo == null)
+                throw new InvalidOperationException("Missing required component.");
+
             ChaFile chaFile;
             try
             {
@@ -26,7 +29,7 @@ namespace KoiCatalog.Plugins.Koikatu
                     chaFile = new ChaFile(stream);
                 }
             }
-            catch (Exception)
+            catch (FileTypeException)
             {
                 return;
             }

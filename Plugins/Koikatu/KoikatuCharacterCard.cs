@@ -78,17 +78,20 @@ namespace KoiCatalog.Plugins.Koikatu
             var body = chaFile.custom?.body;
             if (body != null)
             {
-                if (body.shapeValueBody != null && body.shapeValueBody.Length > 0)
+                var shapeValueBody = body.shapeValueBody;
+                if (shapeValueBody != null)
                 {
-                    Height = body.shapeValueBody[0];
+                    if (shapeValueBody.Length > (int)ChaFileDefine.BodyShapeIdx.Height)
+                    {
+                        Height = shapeValueBody[(int)ChaFileDefine.BodyShapeIdx.Height];
+                    }
+                    if (shapeValueBody.Length > (int)ChaFileDefine.BodyShapeIdx.BustSize)
+                    {
+                        BustSize = shapeValueBody[(int)ChaFileDefine.BodyShapeIdx.BustSize];
+                    }
                 }
-                if (body.shapeValueBody != null && body.shapeValueBody.Length > 4)
-                {
-                    BustSize = body.shapeValueBody[4];
-                }
-                var skinColor = body.skinMainColor;
-                SkinColor = KoikatuColorConversion.KoikatuColorToColor(skinColor);
 
+                SkinColor = KoikatuColorConversion.KoikatuColorToColor(body.skinMainColor);
                 if (body.detailId >= (int)SkinType.Normal && body.detailId <= (int)SkinType.Slender)
                     SkinType = (SkinType)body.detailId;
                 else
@@ -101,10 +104,10 @@ namespace KoiCatalog.Plugins.Koikatu
                 HairStyle = (HairStyle)hair.kind;
                 HairColors = hair.parts
                     .Select((item, index) => new { item, index })
-                    // ID 0 is usually reserved for the "none" option. However, hair part 0 has no such option.
-                    .Where(i => i.index == 0 || i.item.id != 0)
-                    // Skip ahoge slot.
-                    .Where(i => i.index != 3)
+                    // Skip hair slots set to "none" (usually ID 0). Note that back hair has no such option.
+                    .Where(i => i.item.id != 0 || i.index == (int)ChaFileDefine.HairKind.back)
+                    // Ignore option hair because it doesn't usually contribute much to the overall color.
+                    .Where(i => i.index != (int)ChaFileDefine.HairKind.option)
                     .Select(i => i.item.baseColor)
                     .Select(KoikatuColorConversion.KoikatuColorToColor)
                     .Distinct()

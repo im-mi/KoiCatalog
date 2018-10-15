@@ -50,8 +50,7 @@ namespace KoiCatalog.Plugins.Koikatu
         [Display(visibility: Visibility.Hidden, width: 85)]
         public HairStyle HairStyle { get; private set; }
         [Display(visibility: Visibility.Hidden, width: 100)]
-        public IReadOnlyCollection<Color> HairColors { get; private set; } =
-            new List<Color>().AsReadOnly();
+        public IReadOnlyCollection<Color> HairColors { get; private set; } = Array.Empty<Color>();
 
         internal void Initialize(ChaFile chaFile)
         {

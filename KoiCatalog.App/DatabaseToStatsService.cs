@@ -67,11 +67,15 @@ namespace KoiCatalog.App
 
         private StatsLoader StatsLoader { get; } = new StatsLoader();
 
-        private StatsHandler[] StatsHandlers { get; } =
+        private static StatsHandler[] CreateStatsHandlers() =>
             PluginManager.GetNewTypes<StatsHandler>()
-            .Select(Activator.CreateInstance)
-            .Cast<StatsHandler>()
-            .ToArray();
+                .Select(Activator.CreateInstance)
+                .Cast<StatsHandler>()
+                .ToArray();
+
+        private StatsHandler[] StatsHandlers =>
+            _statshandlers ?? (_statshandlers = CreateStatsHandlers());
+        private StatsHandler[] _statshandlers;
 
         private void AddStatisticsForEntity(IReadOnlyEntity entity)
         {

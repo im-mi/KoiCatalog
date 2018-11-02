@@ -21,7 +21,7 @@ namespace KoiCatalog.Gui
             Application = application;
             Title = "Start Page";
 
-            DefaultDirectories.AddRange(FileIOUtil.OmniDefaultDirectoryHandler.GetDirectories());
+            DefaultDirectories.AddRange(FileIOUtil.CreateOmniDefaultDirectoryHandler().GetDirectories());
         }
 
         private async void LoadDirectoryButton_OnClick(object sender, RoutedEventArgs e)

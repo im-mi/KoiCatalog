@@ -31,10 +31,14 @@
         Quiet = 0x1A,
         Stubborn = 0x1B,
         OldFashioned = 0x1C,
-        Honest = 0x1D,
+        Docile = 0x1D,
         Friendly = 0x1E,
-        Willful = 0x1F,
-        Sincere = 0x20,
+        Determined = 0x1F,
+        Honest = 0x20,
         Charming = 0x21,
+        Returnee = 0x22,
+        Slangy = 0x23,
+        Sadistic = 0x24,
+        Emotionless = 0x25,
     }
 }

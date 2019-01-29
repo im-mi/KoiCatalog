@@ -49,11 +49,11 @@ namespace KoiCatalog.App
                             loadMethod = new SerializedDatabaseLoadMethod(cacheFilePath);
                             break;
                         case DatabaseLoadMode.Rebuild:
-                            loadMethod = new CreateFromDirectoryDatabaseLoadMethod(directory, FileIOUtil.OmniFileHandler);
+                            loadMethod = new CreateFromDirectoryDatabaseLoadMethod(directory, FileIOUtil.CreateOmniFileHandler());
                             saveMethod = new SerializedDatabaseSaveMethod(cacheFilePath);
                             break;
                         case DatabaseLoadMode.Refresh:
-                            loadMethod = new CreateFromDirectoryDatabaseLoadMethod(directory, FileIOUtil.OmniFileHandler, update: true);
+                            loadMethod = new CreateFromDirectoryDatabaseLoadMethod(directory, FileIOUtil.CreateOmniFileHandler(), update: true);
                             saveMethod = new SerializedDatabaseSaveMethod(cacheFilePath);
                             break;
                         default:

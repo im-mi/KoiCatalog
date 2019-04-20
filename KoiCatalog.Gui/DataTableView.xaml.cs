@@ -207,7 +207,7 @@ namespace KoiCatalog.Gui
             var uri = element.DataContext as Uri;
             if (uri == null) return;
             if (!uri.IsAbsoluteUri) return;
-            var dataObject = new DataObject(DataFormats.FileDrop, new[] { uri.AbsolutePath });
+            var dataObject = new DataObject(DataFormats.FileDrop, new[] { Uri.UnescapeDataString(uri.AbsolutePath) });
             DragDrop.DoDragDrop(element, dataObject, DragDropEffects.Copy);
         }
 
